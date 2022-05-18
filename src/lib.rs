@@ -1,4 +1,5 @@
 const COLORS: [char; 9] = ['k','r','g','y','b','m','c','w','0'];
+const COLOR_NAMES: [&str; 8] = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"];
 
 /// Convert shorthand color codes into actual color codes.
 /// Best if used in conjunction with the `format!` macro.
@@ -67,11 +68,26 @@ pub fn convert(s: &String) -> String {
 }
 
 /// Print string with color. Syntax specified in `convert()` documentation.
-pub fn printc(s: &String) {
+pub fn printf(s: &String) {
     print!("{}", convert(s));
 }
 
-/// Print string with color with a newline. Syntax specified in `convert()` documentation.
-pub fn printlnc(s: &String) {
+/// Print string `s` with color with a newline. Syntax specified in `convert()` documentation.
+pub fn printlnf(s: &String) {
     println!("{}", convert(s));
+}
+
+/// Print string `s` in color `color`.
+/// Supports ANSI colors.
+pub fn print(color: &str, s: &String) {
+    if COLOR_NAMES.contains(&color) {
+        let index = COLOR_NAMES.iter().position(|&x| x == color).unwrap();
+        print!("{}", format!("\x1b[{}m{}", index+30, s));
+    }
+}
+
+/// Print string `s` in color `color` with a newline.
+/// Supports ANSI colors.
+pub fn println(color: &str, s: &String) {
+    print(color, &format!("{}\n", s));
 }
